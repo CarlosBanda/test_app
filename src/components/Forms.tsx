@@ -16,31 +16,15 @@ export const Forms = () => {
             console.log('User account created & signed in!');
         })
         .catch(error => {
-            if (error.code === 'auth/email-already-in-use') {
-                Alert.alert("Ocurrio un problema", "Verifique sus datos.",[
-                    {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                      },
-                      {text: 'OK', onPress: () => console.log('OK Pressed')}
-                ])
-                return false
-            }
-
-            if (error.code === 'auth/invalid-email') {
-                Alert.alert("Ocurrio un problema", "Verifique sus datos.",[
-                    {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                      },
-                      {text: 'OK', onPress: () => console.log('OK Pressed')}
-                ])
-                return false
-            }
-
-            console.error(error);
+            Alert.alert("Ocurrio un problema", "Verifique sus datos.",[
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {text: 'OK', onPress: () => console.log('OK Pressed')}
+            ])
+            return false
         });
     }   
 
