@@ -1,32 +1,67 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
+import Geolocation from '@react-native-community/geolocation';
+import { Location } from '../interface/Character';
+
+
+
+
 
 export const Home = () => {
-  const [ubicacion, setUbicacion] = useState({})
+  const [longitud, setLongitud] = useState(0)
+  const [latitud, setlatitud] = useState(0)
 
   useEffect(() => {
-  //   navigator.geolocation.getCurrentPosition(
-  // posicion => {
-  //   const ubicacion = JSON.stringify(posicion);
-
-  //   this.setState({ ubicacion });
-  // },
-  // error => Alert.alert(error.message),
-  // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-// );
+    console.log(latitud)
+    requestCameraPermission()
+     Geolocation.getCurrentPosition(
+      ({coords}:any) =>{
+        console.log(coords.latitude)
+        setLongitud(coords.longitude)
+        setlatitud(coords.latitude)
+      }, // OK
+      console.log, // Error
+      { enableHighAccuracy:true, timeout:50000, maximumAge: 1000 } //Opciones
+  ) ;
   }, [])
   
+
+
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Utilizar Ubicación actual',
+          message:
+            'Desea permitir que la aplicacion utilice su ubicacion actual',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the GPS');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+
   return (
     <View style={styles.body}>
-        <MapView style={styles.map} initialRegion={{
-    latitude: 37.78825,
-    longitude: -122.4324,
+        <MapView style={styles.map} showsUserLocation initialRegion={{
+    latitude: latitud,
+    longitude: longitud,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   }}>
-    <Marker coordinate={{latitude: 37.78825,
-    longitude: -122.4324,}}></Marker>
+    <Marker coordinate={{latitude: latitud,
+    longitude: longitud}}></Marker>
   </MapView>
     </View>
   )

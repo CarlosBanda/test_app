@@ -1,25 +1,54 @@
 import React, { useState } from 'react'
-import { Pressable, StyleSheet, Text, TextInput,  View } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, TextInput,  View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-
+import auth from '@react-native-firebase/auth';
 
 export const Forms = () => {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [showPass, setShowPass] = useState(true)
 
-    // const {login} = useAuth();
 
-    const handIngresar  = async () =>{
-        // const data = await loginApi(phone, password)
-        // login(data)
-        console.log({user, password})
+    const handIngresar  = () =>{
+        auth()
+        .signInWithEmailAndPassword(user, password)
+        .then(() => {
+            console.log('User account created & signed in!');
+        })
+        .catch(error => {
+            if (error.code === 'auth/email-already-in-use') {
+                Alert.alert("Ocurrio un problema", "Verifique sus datos.",[
+                    {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {text: 'OK', onPress: () => console.log('OK Pressed')}
+                ])
+                return false
+            }
+
+            if (error.code === 'auth/invalid-email') {
+                Alert.alert("Ocurrio un problema", "Verifique sus datos.",[
+                    {
+                        text: 'Cancel',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      {text: 'OK', onPress: () => console.log('OK Pressed')}
+                ])
+                return false
+            }
+
+            console.error(error);
+        });
     }   
 
     const passView = () =>{
         setShowPass(!showPass)
     }
 
+    
   return (
     <View style={styles.background}>
         <View style={styles.title}>

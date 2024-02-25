@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Dimensions, Alert } from 'react-native'
 import { Card } from './Card'
 import { apiRickAndMorti } from '../api/apiRickAndMorti'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -15,6 +15,12 @@ export const Character = () => {
 
     const searchCharacter = async() =>{
         const data = await apiRickAndMorti(character)
+        if (data.error) {
+            Alert.alert("Ocurrio un erro", "Inserte un valor valido",[
+                {text: 'OK', onPress: () => console.log(results)},
+            ])
+            return false
+        }
         setResults(data.results)
     }
   return (

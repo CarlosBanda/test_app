@@ -1,33 +1,36 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-} from 'react-native';
-
-import { Login } from './src/views/Login';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home } from './src/views/Home';
 import MyTabs from './src/routes/BottomNavigation';
+import { Login } from './src/views/Login';
+import auth from '@react-native-firebase/auth';
 
 
 function App(): React.JSX.Element {
-  
+const [initializing, setInitializing] = useState(true);
+const [user, setUser] = useState();
 
+
+function onAuthStateChanged(user:any) {
+  setUser(user);
+  if (initializing) setInitializing(false);
+}
+
+useEffect(() => {
+  const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  return subscriber; // unsubscribe on unmount
+}, []);
+
+if (initializing) return null;
+
+if (!user) {
   return (
-    // <SafeAreaView>
-    //  <Login></Login>
+    <Login></Login>
+  );
+}
+  return (
      <NavigationContainer>
-        {/* <Home></Home> */}
         <MyTabs></MyTabs>
      </NavigationContainer>
-    // </SafeAreaView>
   );
 }
 
