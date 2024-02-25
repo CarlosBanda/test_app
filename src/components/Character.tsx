@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Dimensions } from 'react-native'
 import { Card } from './Card'
-import { apiRickAndMorti } from '../helpers/apiRickAndMorti'
+import { apiRickAndMorti } from '../api/apiRickAndMorti'
 import Icon from 'react-native-vector-icons/Ionicons'
+import Carousel from 'react-native-snap-carousel';
+
+
+
 
 export const Character = () => {
     const [character, setCharacter] = useState('')
@@ -27,8 +31,19 @@ export const Character = () => {
         </View>
         <View style={styles.card}>
             {
-                results.length === 0 ? <Text>Rick And Morty</Text> :
-                <Card></Card>
+                results.length === 0 ? <Text style={styles.text}>Rick And Morty</Text> : 
+                <View>
+                    <Carousel
+                        sliderWidth={Dimensions.get('window').width}
+                        itemWidth={Dimensions.get('window').width/1.3}
+                        data={results}
+                        keyExtractor={(item) => item}
+                        renderItem={({item}:any) => {return(
+                            <Card character={item}></Card>
+                        )}}
+                        
+                        />
+                </View>
             }
         </View>
     </View>
@@ -39,6 +54,7 @@ export const Character = () => {
 const styles = StyleSheet.create({
     body:{
         flex:1,
+        width:'100%',
       },
     text: {
         color: 'black',
@@ -49,7 +65,9 @@ const styles = StyleSheet.create({
     },
     card:{
         flex:3,
-        backgroundColor: 'red',
+        // marginBottom: 30,
+        // marginHorizontal: 20,
+        // backgroundColor: 'red',
     },
     input: {
         height: 40,
@@ -67,4 +85,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#63F331', 
         alignContent:'center'
     },
+    scroll:{
+        // paddingVertical:30
+    }
 })
